@@ -1,10 +1,11 @@
 # importing required libraries
 import requests
+from functools import lru_cache
 
 
+@lru_cache(maxsize=128)
 # Function to get real time currency exchange
 def RealTimeCurrencyExchangeRate(from_currency, to_currency, api_key):
-
     # main_url variable store complete url
     main_url = 'https://v6.exchangerate-api.com/v6/' + api_key + "/pair/" + from_currency + "/" + to_currency
 
