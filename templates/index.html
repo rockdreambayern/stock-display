@@ -9,6 +9,7 @@
         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
         th { background-color: #f2f2f2; }
+        .chart-container { margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -18,7 +19,7 @@
             <tr>
                 <th>股票代码</th>
                 <th>股票名称</th>
-                <th>最新价格（港元）</th>
+                <th>最新价格(港元)</th>
                 <th>对应人民币价格</th>
             </tr>
         </thead>
@@ -26,6 +27,21 @@
             <!-- 数据行将在此处插入 -->
         </tbody>
     </table>
+
+    <div class="chart-container">
+        <h2>最近收盘价</h2>
+        <table id="latest-prices-table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>收盘价(港元)</th>
+                </tr>
+            </thead>
+            <tbody id="latest-prices-body">
+                <!-- 收盘价数据将在此处插入 -->
+            </tbody>
+        </table>
+    </div>
 
     <script>
         // 使用 fetch API 调用接口
@@ -39,7 +55,7 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${stock.code}</td>
-                        <td>${stock.name}</td>
+                        <td><a href="#" onclick="fetchLatestPrices('${stock.code}')">${stock.name}</a></td>
                         <td>${stock.price}</td>
                         <td>${stock.price_cny}</td>
                     `;
@@ -47,6 +63,28 @@
                 });
             })
             .catch(error => console.error('Error fetching stock data:', error));
+
+        function fetchLatestPrices(code) {
+            fetch(`http://127.0.0.1:5000/stock_latest/${code}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('latest-prices-body');
+                    tbody.innerHTML = ''; // 清空表格内容
+
+                    // 按日期从新到旧排序
+                    data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    data.forEach(entry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${entry.date}</td>
+                            <td>${entry.price}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching latest prices:', error));
+        }
     </script>
 </body>
 </html>
