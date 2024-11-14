@@ -9,7 +9,6 @@ def query_stock_price(currency_code, currency_rate_api_key):
     target_stock = stock_hk_spot_df[stock_hk_spot_df["代码"] == "03690"]
     latest_price = target_stock["最新价"].values[0]
 
-
     current_exchange_rate = currency_exchange_rate.RealTimeCurrencyExchangeRate("HKD", currency_code,
                                                                                 currency_rate_api_key)
     result = math.floor(latest_price * current_exchange_rate * 100) / 100

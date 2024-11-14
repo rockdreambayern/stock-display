@@ -19,13 +19,6 @@ def RealTimeCurrencyExchangeRate(from_currency, to_currency, api_key):
     # result contains list of nested dictionaries
     result = req_ob.json()
 
-    print(" Result before parsing the json data :\n", result)
-
-    print("\n After parsing : \n Realtime Currency Exchange Rate for",
-          result["base_code"], "TO",
-          result["target_code"], "is",
-          result["conversion_rate"], to_currency)
-
     return result["conversion_rate"]
 
 
